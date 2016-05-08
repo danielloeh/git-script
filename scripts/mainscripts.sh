@@ -1,19 +1,26 @@
 #!/bin/bash
-source ./commit.sh
+
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
 addToBashRC(){
 	# TODO: extend it to more bash specific files
-	printf '%s' 'Do you want to append to source this script to your bashrc? (y/n)'
-	read  yn
-	if [ "$yn" = "y" ]; then
-		if [ -f ~/.bashrc ]; then
-			echo "source $SCRIPT_DIR/gitscripts.sh" >>~/.bashrc	
-		else 
-			echo ".bashrc does not exist"
+	is_already_in_bashrc=`cat ~/.bashrc | grep "gitscripts" | wc -l`
+	is_already_in_bashrc="$(echo -e "${is_already_in_bashrc}" | tr -d '[[:space:]]')"
+	
+	if [ "1" != "$is_already_in_bashrc" ]; then
+		printf '%s' 'Do you want to append to source this script to your bashrc? (y/n)'
+		read  yn
+		if [ "$yn" = "y" ]; then
+			if [ -f ~/.bashrc ]; then	
+				echo "source $SCRIPT_DIR/gitscripts.sh" >>~/.bashrc	
+			else 
+				echo ".bashrc does not exist"
+			fi
+		else
+			break;
 		fi
-	else
-		break;
+	else 
+		echo "gitscripts is already in bashrc, please change manually"
 	fi
 }
 
