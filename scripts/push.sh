@@ -1,6 +1,7 @@
 function prepushHook() {
-	echo "Executing prepush hooks..."
-	return 1;
+	#add your custom calls
+	echo "Excecuting pre push hooks.."
+	eval "$1='1'"
 }
 
 function pushitgood() {
@@ -11,12 +12,11 @@ function pushitgood() {
 	
 	if [ "1" != "$up-to-date" ]; then
 
-	
-		wasSuccessful=prepushHook
+		retval=''
+		prepushHook retval
 		
-		if [ "1" != "$wasSuccessful" ]; then
+		if [ "1" != "$retval" ]; then
 			echo "Prepush hooks failed"
-			exit 0
 		else
 			git push
 		fi 	 

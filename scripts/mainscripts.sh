@@ -4,7 +4,7 @@ SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
 addToBashRC(){
 	# TODO: extend it to more bash specific files
-	is_already_in_bashrc=`cat ~/.bashrc | grep "gitscripts" | wc -l`
+	is_already_in_bashrc=`cat ~/.bashrc | grep "gitscripts-all" | wc -l`
 	is_already_in_bashrc="$(echo -e "${is_already_in_bashrc}" | tr -d '[[:space:]]')"
 	
 	if [ "1" != "$is_already_in_bashrc" ]; then
@@ -12,7 +12,7 @@ addToBashRC(){
 		read  yn
 		if [ "$yn" = "y" ]; then
 			if [ -f ~/.bashrc ]; then	
-				echo "source $SCRIPT_DIR/gitscripts.sh" >>~/.bashrc	
+				echo "source $SCRIPT_DIR/gitscripts-all.sh" >>~/.bashrc	
 			else 
 				echo ".bashrc does not exist"
 			fi
