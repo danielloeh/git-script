@@ -6,22 +6,27 @@ function prepushHook() {
 
 function pushitgood() {
 	
-	up_to_date_with_master=`git status | grep "up-to-date" | wc -l`
-	# remove whitespace
-	up_to_date_with_master="$(echo -e "${up_to_date}" | tr -d '[[:space:]]')"
+	#fetching remote status
+	git remote update 
 	
-	if [ "1" != "$up-to-date" ]; then
+	LOCAL=$(git rev-parse @)
+	REMOTE=$(git rev-parse @{u})
+	BASE=$(git merge-base @ @{u})
 
+	if [ $LOCAL = $REMOTE ]; then
+	    echo "Nothing to push."
+	elif [ $LOCAL = $BASE ]; then
+	    echo "Remote is ahead, please pull first."
+	elif [ $REMOTE = $BASE ]; then
 		retval=''
 		prepushHook retval
-		
 		if [ "1" != "$retval" ]; then
 			echo "Prepush hooks failed"
 		else
 			git push
 		fi 	 
-	else	
-		echo 'Nothing available to push.'
+	else
+	    echo "Diverged"
 	fi
 }
 
