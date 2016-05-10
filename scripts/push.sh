@@ -1,44 +1,54 @@
 function prepushHook() {
-	#add your custom calls
+	
 	if [ -f "prepush_hooks.sh" ]; then
-		echo "Excecuting pre push hooks."
-		sh prepush_hooks.sh
-		if [ $? -eq 0 ]; then
-		    echo OK
-		else
-		    echo FAIL
-		fi
+		echo "Executing pre push hooks..."
+		while read SCRIPTLINE
+		do
+		    eval "$SCRIPTLINE"
+			if [ $? -eq 0 ]; then
+				echo -e "\033[32m>> $SCRIPTLINE ran successfully." 
+			else
+				echo -e "\033[32m>> $SCRIPTLINE failed."
+				return 0
+			fi
+		done < prepush_hooks.sh
+		
 		eval "$1='1'"
 	else
 		echo "No prepush_hooks.sh found."
-		eval "$1='0'"
 	fi
 }
 
 function pushitgood() {
-	
-	#fetching remote status
+
 	git remote update 
-	
-	#comparing local to remote revision
+
+	echo "Comparing local to remote revision..."
 	LOCAL=$(git rev-parse @)
 	REMOTE=$(git rev-parse @{u})
 	BASE=$(git merge-base @ @{u})
 
 	if [ $LOCAL = $REMOTE ]; then
-	    echo "Nothing to push."
+	    echo -e "\033[31mNothing to push."
 	elif [ $LOCAL = $BASE ]; then
-	    echo "Remote is ahead, please pull first."
+	    echo -e "\033[31mRemote is ahead, please pull first."
 	elif [ $REMOTE = $BASE ]; then
 		retval=''
 		prepushHook retval
 		if [ "1" != "$retval" ]; then
-			echo "Prepush hooks failed."
+			echo -e "\033[31m#########################"
+			echo -e "\033[31m######   FAILED    ######"
+			echo -e "\033[31m# Pre push hooks failed #"
+			echo -e "\033[31m#########################"
 		else
-			#git push
+			echo -e "\033[32m#########################"
+			echo -e "\033[32m######## SUCCESS ########"
+			echo -e "\033[32m#########################"
+			echo "Pushing..."
+			git push
 		fi 	 
 	else
-	    echo "Diverged"
+	    echo -e "\033[31m Diverged."
 	fi
 }
 
