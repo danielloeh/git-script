@@ -8,7 +8,7 @@ function prepushHook() {
 			if [ $? -eq 0 ]; then
 				echo -e "\033[32m>> $SCRIPTLINE ran successfully." 
 			else
-				echo -e "\033[32m>> $SCRIPTLINE failed."
+				echo -e "\033[31m>> $SCRIPTLINE failed."
 				return 0
 			fi
 		done < prepush_hooks.sh
@@ -45,7 +45,7 @@ function pushitgood() {
 			echo -e "\033[32m######## SUCCESS ########"
 			echo -e "\033[32m#########################"
 			echo "Pushing..."
-			#git push
+			git push
 		fi 	 
 	else
 	    echo -e "\033[31m Diverged."
