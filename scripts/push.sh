@@ -16,6 +16,7 @@ function prepushHook() {
 		eval "$1='1'" 
 	else
 		echo "No prepush_hooks.sh found."
+		#TODO: ask if user wants to push anyway
 	fi
 }
 
