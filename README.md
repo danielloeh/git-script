@@ -4,17 +4,17 @@ Collection of useful git scripts for the daily routines
 
 ### How to use
 
-sh assemble_scripts.sh
-source gitscripts-all.sh
-edit gitscripts-all.sh to match your projectspecific parameters (pre push hooks?!)
+run 'sh assemble_scripts.sh &&  source gitscripts-all.sh'
 copy gitscripts-all.sh to your project
-addToBashRC
+edit gitscripts-all.sh to match your projectspecific parameters (pre push hooks?!)
+run 'addToBashRC'
 
 
 Todo:
 - [done] Merging Script to merge in /out/gitscripts.sh
-- compare local to remote before pushing [done]
+- [done] compare local to remote before pushing 
+- [done] bug: special chars in commit script
 - Fix autocomplete for zsh
 - upto: cd .. with no param
 - add downto
-- externalize project specific configuration
+- add configuration for pre push hooks aka testit
