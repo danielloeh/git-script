@@ -13,7 +13,7 @@ function prepushHook() {
 			fi
 		done < prepush_hooks.sh
 		
-		eval "$1='1'"
+		eval "$1='1'" 
 	else
 		echo "No prepush_hooks.sh found."
 	fi
