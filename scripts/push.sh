@@ -45,7 +45,7 @@ function pushitgood() {
 			echo -e "\033[32m######## SUCCESS ########"
 			echo -e "\033[32m#########################"
 			echo "Pushing..."
-			git push
+			#git push
 		fi 	 
 	else
 	    echo -e "\033[31m Diverged."
