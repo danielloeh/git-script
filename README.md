@@ -13,6 +13,7 @@ addToBashRC
 
 Todo:
 - [done] Merging Script to merge in /out/gitscripts.sh
+- compare local to remote before pushing [done]
 - Fix autocomplete for zsh
 - upto: cd .. with no param
 - add downto

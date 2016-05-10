@@ -24,20 +24,6 @@ addToBashRC(){
 	fi
 }
 
-initZshRC(){
-	printf '%s' 'Do you want to append to source this script to your .zshrc? (y/n)'
-	read  yn
-	if [ "$yn" = "y" ]; then
-		if [ -f "~/.zshrc" ]; then
-			echo 'source $SCRIPT_DIR/gitscripts.sh' >>~/.zshrc
-		else 
-			echo ".zshrc does not exist"
-		fi
-	else
-		break;
-	fi
-}
-
 
 stashall()  {
 	(

@@ -1,6 +1,7 @@
 function prepushHook() {
 	#add your custom calls
 	echo "Excecuting pre push hooks.."
+	#TODO: read and execute external script
 	eval "$1='1'"
 }
 
@@ -9,6 +10,7 @@ function pushitgood() {
 	#fetching remote status
 	git remote update 
 	
+	#comparing local to remote revision
 	LOCAL=$(git rev-parse @)
 	REMOTE=$(git rev-parse @{u})
 	BASE=$(git merge-base @ @{u})

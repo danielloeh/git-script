@@ -1,7 +1,11 @@
 function commit(){
-	local nothing_to_commit=`git status | grep "nothing to commit" | wc -l`
-	local nothing_added_to_commit=`git status | grep "nothing added to commit" | wc -l`	
-	local no_changes_added=`git status | grep "no changes added to commit" | wc -l`	
+	# has to be line broken in several lines because of zsh
+	local nothing_to_commit
+	nothing_to_commit=`git status | grep "nothing to commit" | wc -l`
+	local nothing_added_to_commit
+	nothing_added_to_commit=`git status | grep "nothing added to commit" | wc -l`	
+	local no_changes_added
+	no_changes_added=`git status | grep "no changes added to commit" | wc -l`	
 	# remove whitespace
 	nothing_added_to_commit="$(echo -e "${nothing_added_to_commit}" | tr -d '[[:space:]]')"
 	nothing_to_commit="$(echo -e "${nothing_to_commit}" | tr -d '[[:space:]]')"
@@ -12,8 +16,10 @@ function commit(){
     	touch /tmp/last_pair
     	touch /tmp/last_story
 		
-    	local last_pair=`cat /tmp/last_pair`
-    	local last_story=`cat /tmp/last_story`
+    	local last_pair
+		last_pair=`cat /tmp/last_pair`
+    	local last_story
+		last_story=`cat /tmp/last_story`
 
 		printf 'pair [%s]:' $last_pair
     	read  pair
