@@ -1,8 +1,13 @@
 function prepushHook() {
 	#add your custom calls
-	echo "Excecuting pre push hooks.."
-	#TODO: read and execute external script
-	eval "$1='1'"
+	if [ -f "prepush_hooks.sh" ]; then
+		echo "Excecuting pre push hooks."
+		sh prepush_hooks.sh
+		eval "$1='1'"
+	else
+		echo "No prepush_hooks.sh found."
+		eval "$1='0'"
+	fi
 }
 
 function pushitgood() {
@@ -23,7 +28,7 @@ function pushitgood() {
 		retval=''
 		prepushHook retval
 		if [ "1" != "$retval" ]; then
-			echo "Prepush hooks failed"
+			echo "Prepush hooks failed."
 		else
 			git push
 		fi 	 
