@@ -3,6 +3,11 @@ function prepushHook() {
 	if [ -f "prepush_hooks.sh" ]; then
 		echo "Excecuting pre push hooks."
 		sh prepush_hooks.sh
+		if [ $? -eq 0 ]; then
+		    echo OK
+		else
+		    echo FAIL
+		fi
 		eval "$1='1'"
 	else
 		echo "No prepush_hooks.sh found."
@@ -30,7 +35,7 @@ function pushitgood() {
 		if [ "1" != "$retval" ]; then
 			echo "Prepush hooks failed."
 		else
-			git push
+			#git push
 		fi 	 
 	else
 	    echo "Diverged"
