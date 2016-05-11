@@ -1,4 +1,49 @@
-function prepushHook() {
+#
+#
+#	This script pushes current commits if:
+#		- There is somthing to push
+#		- The branches have not diverged
+#		- The remote branch is not ahead
+#		- the precommit hooks (specified as bash commands in precommit_hooks.sh) ran succesfully
+#
+#   Usage: 'pushitgood' 
+#
+
+function pushitgood() {
+	
+	__print_pushitgood
+		
+	git remote update 
+
+	echo "Comparing local to remote revision..."
+	LOCAL=$(git rev-parse @)
+	REMOTE=$(git rev-parse @{u})
+	BASE=$(git merge-base @ @{u})
+
+	if [ $LOCAL = $REMOTE ]; then
+	    echo -e "\033[31mNothing to push."
+	elif [ $LOCAL = $BASE ]; then
+	    echo -e "\033[31mRemote is ahead, please pull first."
+	elif [ $REMOTE = $BASE ]; then
+		return_value=''
+		runtests return_value
+		if [ "1" = "return_value" ]; then
+			
+			git push			
+			if [ $? -eq 0 ]; then
+			 	__print_success
+			else
+				__print_failed
+			fi   
+		else
+			__print_failed	                                                                                               
+		fi 	
+	else
+	    echo -e "\033[31m Branches have diverged."
+	fi
+}
+
+function runtests() {
 	
 	if [ -f "prepush_hooks.sh" ]; then
 		echo "Executing pre push hooks..."
@@ -26,8 +71,36 @@ function prepushHook() {
 	fi
 }
 
-function pushitgood() {
 
+function __print_failed(){
+	echo -e '\033[31m
+	$$$$$$$$\  $$$$$$\  $$$$$$\ $$\       $$$$$$$$\ $$$$$$$\  
+	$$  _____|$$  __$$\ \_$$  _|$$ |      $$  _____|$$  __$$\ 
+	$$ |      $$ /  $$ |  $$ |  $$ |      $$ |      $$ |  $$ |
+ 	$$$$$\    $$$$$$$$ |  $$ |  $$ |      $$$$$\    $$ |  $$ |
+	$$  __|   $$  __$$ |  $$ |  $$ |      $$  __|   $$ |  $$ |
+	$$ |      $$ |  $$ |  $$ |  $$ |      $$ |      $$ |  $$ |
+	$$ |      $$ |  $$ |$$$$$$\ $$$$$$$$\ $$$$$$$$\ $$$$$$$  |
+	\__|      \__|  \__|\______|\________|\________|\_______/                                                           
+ 	\e[0m
+	'
+}
+
+function __print_success(){
+	echo -e '\033[32m
+    $$$$$$\  $$\   $$\  $$$$$$\   $$$$$$\  $$$$$$$$\  $$$$$$\   $$$$$$\  
+   $$  __$$\ $$ |  $$ |$$  __$$\ $$  __$$\ $$  _____|$$  __$$\ $$  __$$\ 
+   $$ /  \__|$$ |  $$ |$$ /  \__|$$ /  \__|$$ |      $$ /  \__|$$ /  \__|
+   \$$$$$$\  $$ |  $$ |$$ |      $$ |      $$$$$\    \$$$$$$\  \$$$$$$\  
+    \____$$\ $$ |  $$ |$$ |      $$ |      $$  __|    \____$$\  \____$$\ 
+   $$\   $$ |$$ |  $$ |$$ |  $$\ $$ |  $$\ $$ |      $$\   $$ |$$\   $$ |
+   \$$$$$$  |\$$$$$$  |\$$$$$$  |\$$$$$$  |$$$$$$$$\ \$$$$$$  |\$$$$$$  |
+    \______/  \______/  \______/  \______/ \________| \______/  \______/ 
+    \e[0m
+	'
+}
+
+function __print_pushitgood(){
 	echo -e '\033[33m
 	$$$$$$$\  $$\   $$\  $$$$$$\  $$\   $$\       $$$$$$\ $$$$$$$$\        $$$$$$\   $$$$$$\   $$$$$$\  $$$$$$$\  $$\ 
 	$$  __$$\ $$ |  $$ |$$  __$$\ $$ |  $$ |      \_$$  _|\__$$  __|      $$  __$$\ $$  __$$\ $$  __$$\ $$  __$$\ $$ |
@@ -39,52 +112,5 @@ function pushitgood() {
 	\__|       \______/  \______/ \__|  \__|      \______|   \__|          \______/  \______/  \______/ \_______/ \__|                                                                                                                                         
    	\e[0m
 	'
-
-	git remote update 
-
-	echo "Comparing local to remote revision..."
-	LOCAL=$(git rev-parse @)
-	REMOTE=$(git rev-parse @{u})
-	BASE=$(git merge-base @ @{u})
-
-	if [ $LOCAL = $REMOTE ]; then
-	    echo -e "\033[31mNothing to push."
-	elif [ $LOCAL = $BASE ]; then
-	    echo -e "\033[31mRemote is ahead, please pull first."
-	elif [ $REMOTE = $BASE ]; then
-		retval=''
-		prepushHook retval
-		if [ "1" != "$retval" ]; then
-			
-			echo -e '\033[31m
-			$$$$$$$$\  $$$$$$\  $$$$$$\ $$\       $$$$$$$$\ $$$$$$$\  
-			$$  _____|$$  __$$\ \_$$  _|$$ |      $$  _____|$$  __$$\ 
-			$$ |      $$ /  $$ |  $$ |  $$ |      $$ |      $$ |  $$ |
-		 	$$$$$\    $$$$$$$$ |  $$ |  $$ |      $$$$$\    $$ |  $$ |
-			$$  __|   $$  __$$ |  $$ |  $$ |      $$  __|   $$ |  $$ |
-			$$ |      $$ |  $$ |  $$ |  $$ |      $$ |      $$ |  $$ |
-			$$ |      $$ |  $$ |$$$$$$\ $$$$$$$$\ $$$$$$$$\ $$$$$$$  |
-			\__|      \__|  \__|\______|\________|\________|\_______/                                                           
-		 	\e[0m
-			'
-		else 
-			
-			echo -e '\033[32m
-		    $$$$$$\  $$\   $$\  $$$$$$\   $$$$$$\  $$$$$$$$\  $$$$$$\   $$$$$$\  
-		   $$  __$$\ $$ |  $$ |$$  __$$\ $$  __$$\ $$  _____|$$  __$$\ $$  __$$\ 
-		   $$ /  \__|$$ |  $$ |$$ /  \__|$$ /  \__|$$ |      $$ /  \__|$$ /  \__|
-		   \$$$$$$\  $$ |  $$ |$$ |      $$ |      $$$$$\    \$$$$$$\  \$$$$$$\  
-		    \____$$\ $$ |  $$ |$$ |      $$ |      $$  __|    \____$$\  \____$$\ 
-		   $$\   $$ |$$ |  $$ |$$ |  $$\ $$ |  $$\ $$ |      $$\   $$ |$$\   $$ |
-		   \$$$$$$  |\$$$$$$  |\$$$$$$  |\$$$$$$  |$$$$$$$$\ \$$$$$$  |\$$$$$$  |
-		    \______/  \______/  \______/  \______/ \________| \______/  \______/ 
-            \e[0m
-			'                                                         
-                                                        
-			#git push
-		fi 	 
-	else
-	    echo -e "\033[31m Diverged."
-	fi
 }
 
