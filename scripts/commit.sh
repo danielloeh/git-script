@@ -21,16 +21,16 @@ function commit(){
     	local last_story
 		last_story=`cat /tmp/last_story`
 
-		printf 'pair [%s]:' $last_pair
+		printf 'pair [%s]:' "$last_pair"
     	read  pair
-		printf 'story [%s]:' $last_story
+		printf 'story [%s]:' "$last_story"
 		pair=${pair:-$last_pair}
     	read  story
 		story=${story:-$last_story}
 		printf '%s ' 'message:'
     	read  message
 		
-    	git commit -m "${story}|${pair}|${message}"
+    	git commit -m "${pair}|${story}|${message}"
 
     	echo "${story}" > /tmp/last_story
     	echo "${pair}" > /tmp/last_pair
