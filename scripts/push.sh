@@ -27,7 +27,7 @@ function pushitgood() {
 	elif [ $REMOTE = $BASE ]; then
 		return_value=''
 		runtests return_value
-		if [ "1" = "return_value" ]; then
+		if [ "1" = "$return_value" ]; then
 			
 			git push			
 			if [ $? -eq 0 ]; then
@@ -61,7 +61,7 @@ function runtests() {
 		eval "$1='1'" 
 	else
 		echo "No prepush_hooks.sh found."
-		echo "Do you want to push anyway (y / n)?"
+		printf "Do you want to push anyway (y/n)?"
     	read yn
 		if [ "$yn" = "y" ]; then
 			eval "$1='1'" 
