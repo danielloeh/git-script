@@ -47,7 +47,8 @@ function runtests() {
 	
 	if [ -f "prepush_hooks.sh" ]; then
 		echo "Executing pre push hooks..."
-		
+
+
 		# Internal variable to store the time elapsed
 		SECONDS=0
 		
@@ -62,6 +63,7 @@ function runtests() {
 			fi
 		done < prepush_hooks.sh
 		printf 'Finished executing pre push hooks in: %s seconds.' "$Seconds"
+
 		eval "$1='1'" 
 	else
 		echo "No prepush_hooks.sh found."
