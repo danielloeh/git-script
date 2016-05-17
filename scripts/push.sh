@@ -29,7 +29,7 @@ function pushitgood() {
 		runtests return_value
 		if [ "1" = "$return_value" ]; then
 			
-			git push			
+			#git push			
 			if [ $? -eq 0 ]; then
 			 	__print_success
 			else
@@ -62,7 +62,8 @@ function runtests() {
 				return 0
 			fi
 		done < prepush_hooks.sh
-		printf 'Finished executing pre push hooks in: %s seconds.' "$Seconds"
+		printf 'Finished executing pre push hooks in: %s seconds.' "$SECONDS"
+		echo "$SECONDS"
 
 		eval "$1='1'" 
 	else
