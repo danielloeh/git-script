@@ -63,6 +63,7 @@ function runtests() {
 			fi
 		done < prepush_hooks.sh
 		printf 'Finished executing pre push hooks in: %s seconds.' "$SECONDS"
+
 		echo "$SECONDS"
 
 		eval "$1='1'" 
