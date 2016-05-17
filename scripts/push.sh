@@ -39,7 +39,7 @@ function pushitgood() {
 			__print_failed	                                                                                               
 		fi 	
 	else
-	    echo -e "\033[31m Branches have diverged."
+	    echo -e "\033[31m Branches have diverged. Please pull first."
 	fi
 }
 
@@ -47,6 +47,9 @@ function runtests() {
 	
 	if [ -f "prepush_hooks.sh" ]; then
 		echo "Executing pre push hooks..."
+		
+		SECONDS=0
+		
 		while read SCRIPTLINE
 		do
 		    eval "$SCRIPTLINE"
@@ -57,7 +60,7 @@ function runtests() {
 				return 0
 			fi
 		done < prepush_hooks.sh
-		
+		printf 'Finished executing pre push hooks in: %s seconds.' "$seconds"
 		eval "$1='1'" 
 	else
 		echo "No prepush_hooks.sh found."
