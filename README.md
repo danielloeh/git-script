@@ -18,3 +18,6 @@ Todo:
 - upto: cd .. with no param
 - add downto
 - add configuration for pre push hooks aka testit
+- track cycle time 
+- track long running steps
+- check if there are open chances not in stage
