@@ -12,6 +12,12 @@
 function pushitgood() {
 	
 	__print_pushitgood
+	
+	__checkForOpenChanges run
+	
+	if [ "0" = "$run" ]; then
+		return 0
+	fi
 		
 	git remote update 
 
@@ -67,6 +73,22 @@ function runtests() {
 		eval "$1='1'" 
 	else
 		echo "No prepush_hooks.sh found."
+		printf "Do you want to push anyway (y/n)?"
+    	read yn
+		if [ "$yn" = "y" ]; then
+			eval "$1='1'" 
+		else
+			eval "$1='0'" 
+		fi
+	fi
+}
+
+function __checkForOpenChanges(){
+	if git diff-index --quiet HEAD --; then
+	    eval "$1='1'" 
+	else
+		git status
+		echo "There are uncommited changes!"
 		printf "Do you want to push anyway (y/n)?"
     	read yn
 		if [ "$yn" = "y" ]; then
