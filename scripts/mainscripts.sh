@@ -67,37 +67,4 @@ statusall(){
 	)
 }
 
-upto ()
-{
-    if [ -z "$1" ]; then
-        return
-    fi
-    local upto=$1
-    cd "${PWD/\/$upto\/*//$upto}"
-}
-
-_upto_bash()
-{
-    local cur=${COMP_WORDS[COMP_CWORD]}
-    local d=${PWD//\//\ }
-    COMPREPLY=( $( compgen -W "$d" -- "$cur" ) )
-}
-
-#TODO: autocomplete with zsh not working yet
-_upto_zsh()
-{
-    local word completions
-    word="$1"
-    completions=${PWD//\//\ }
-	echo completions
-    reply=${completions[@]}
-}
-
-#auto complete for zsh
-if [ "$SHELL" = "/bin/zsh" ]; then
-	compctl -K _upto_zsh upto
-else #for all other shells
-	complete -F _upto_bash upto
-fi
-
 
