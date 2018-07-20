@@ -159,9 +159,10 @@ function pushitgood() {
 	fi
 }
 
-# Counts commits for a certain given author for either the current dir or the directories one below
+# Prints some git statsfor a certain given author for either the current dir or the directories one below
 # Parameter: $1 for the authors name
-function countCommitsForAuthor()  {
+# Note: only works on machines with awk installed (like macos)
+function gitStatsForAuthor()  {
     echo "Finding commits for $1"
         (
         if [ -d "./.git" ];then
@@ -172,6 +173,7 @@ function countCommitsForAuthor()  {
                 dir=${dir%*/}
                 echo "Checking commit counts for ${dir##*/}"
                 (cd ${dir} && git shortlog HEAD -s -n --all --no-merges | grep $1 )
+		(cd ${dir} && git log --author=$1 --pretty=tformat: --numstat | awk '{ add += $1; subs += $2; loc += $1 - $2 } END { printf "added lines: %s, removed lines: %s, total lines: %s\n", add, subs, loc }' -)
             done
           fi
         echo 'Done.'
