@@ -159,6 +159,25 @@ function pushitgood() {
 	fi
 }
 
+# Counts commits for a certain given author for either the current dir or the directories one below
+# Parameter: $1 for the authors name
+function countCommitsForAuthor()  {
+    echo "Finding commits for $1"
+        (
+        if [ -d "./.git" ];then
+           git shortlog -s -n --all --no-merges | grep $1
+        else
+           for dir in ./*/
+            do
+                dir=${dir%*/}
+                echo "Checking commit counts for ${dir##*/}"
+                (cd ${dir} && git shortlog HEAD -s -n --all --no-merges | grep $1 )
+            done
+          fi
+        echo 'Done.'
+        )
+}
+
 function runtests() {
 	
 	if [ -f "prepush_hooks.sh" ]; then
